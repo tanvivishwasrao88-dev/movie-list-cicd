@@ -1,45 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login 🎬</title>
+  <title>🎬 Movie List</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { background:#0f0f1a; color:white;
-           font-family:Arial; display:flex;
-           justify-content:center; align-items:center;
-           height:100vh; }
-    .box { background:#1a1a2e; padding:40px;
-           border-radius:16px; width:320px;
-           border:1px solid #333; text-align:center; }
-    h1 { color:#e50914; font-size:2em; margin-bottom:5px; }
-    p  { color:#aaa; margin-bottom:25px; font-size:0.9em; }
-    input { width:100%; padding:12px; margin:8px 0;
-            background:#0f0f1a; border:1px solid #444;
-            border-radius:8px; color:white; font-size:1em; }
-    input:focus { border-color:#e50914; outline:none; }
-    button { width:100%; padding:12px; background:#e50914;
-             border:none; border-radius:8px; color:white;
-             font-size:1em; font-weight:bold;
-             cursor:pointer; margin-top:10px; }
-    button:hover { background:#b30710; }
-    .error { color:#ff6b6b; margin-top:15px; font-size:0.9em; }
-    .hint  { color:#555; margin-top:20px; font-size:0.8em; }
+    body { background:#0f0f1a; color:white; font-family:Arial; }
+    header { background:#e50914; padding:18px 30px;
+             display:flex; justify-content:space-between;
+             align-items:center; }
+    header h1 { font-size:1.8em; letter-spacing:2px; }
+    .user-info a { color:white; margin-left:15px;
+                   background:rgba(0,0,0,0.3);
+                   padding:6px 14px; border-radius:20px;
+                   text-decoration:none; }
+    .search-bar { text-align:center; padding:25px; }
+    .search-bar input { padding:12px 24px; width:350px;
+                        background:#1a1a2e; border:1px solid #444;
+                        border-radius:30px; color:white; font-size:1em; }
+    .search-bar input:focus { border-color:#e50914; outline:none; }
+    .grid { display:flex; flex-wrap:wrap;
+            justify-content:center; gap:24px; padding:10px 40px 40px; }
+    .card { background:#1a1a2e; border-radius:14px;
+            padding:28px 20px; width:190px; text-align:center;
+            border:1px solid #222; transition:0.3s; }
+    .card:hover { border-color:#e50914; transform:translateY(-6px);
+                  box-shadow:0 10px 30px rgba(229,9,20,0.3); }
+    .emoji { font-size:3em; }
+    .name  { font-weight:bold; margin:12px 0 4px; font-size:1.1em; }
+    .year  { color:#888; font-size:0.85em; margin-bottom:14px; }
+    .stars a { text-decoration:none; font-size:1.4em; }
+    .star-filled { color:#f5c518; }
+    .star-empty  { color:#444; }
+    .rated-text  { color:#f5c518; font-size:0.75em; margin-top:4px; }
+    footer { text-align:center; padding:24px; color:#333; font-size:0.85em; }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h1>🎬</h1>
-    <h1>MOVIE LIST</h1>
-    <p>Sign in to continue</p>
-    <form method="POST">
-      <input type="text"     name="username" placeholder="Username" required/>
-      <input type="password" name="password" placeholder="Password" required/>
-      <button type="submit">LOGIN →</button>
-    </form>
-    {% if error %}
-    <p class="error">{{ error }}</p>
-    {% endif %}
-    <p class="hint">Try: admin / 1234</p>
+<header>
+  <h1>🎬 MOVIE LIST</h1>
+  <div class="user-info">
+    👤 {{ user }}
+    <a href="/logout">Logout</a>
   </div>
+</header>
+<div class="search-bar">
+  <form method="GET">
+    <input type="text" name="search"
+           placeholder="🔍 Search movies..."
+           value="{{ search }}"
+           oninput="this.form.submit()"/>
+  </form>
+</div>
+<div class="grid">
+  {% if movies %}
+    {% for movie in movies %}
+    <div class="card">
+      <div class="emoji">{{ movie.emoji }}</div>
+      <div class="name">{{ movie.name }}</div>
+      <div class="year">📅 {{ movie.year }}</div>
+      <div class="stars">
+        {% for i in range(1, 6) %}
+          <a href="/rate/{{ movie.id }}/{{ i }}">
+            {% if i <= movie.rating %}
+              <span class="star-filled">★</span>
+            {% else %}
+              <span class="star-empty">★</span>
+            {% endif %}
+          </a>
+        {% endfor %}
+      </div>
+      {% if movie.rating > 0 %}
+      <div class="rated-text">You rated {{ movie.rating }}/5</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  {% else %}
+    <p style="color:#555;padding:60px">😕 No movies found!</p>
+  {% endif %}
+</div>
+<footer>Deployed via Jenkins + Docker + AWS ECR ☁️</footer>
 </body>
 </html>
