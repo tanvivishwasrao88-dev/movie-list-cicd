@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>🎬 Movie List</title>
+  <style>
+    body { background:#0f0f1a; color:white; font-family:Arial; margin:0; }
+    header { background:#e50914; padding:20px; text-align:center; }
+    h1 { font-size:2.5em; }
+    .grid { display:flex; flex-wrap:wrap;
+            justify-content:center; gap:20px; padding:40px; }
+    .card { background:#1a1a2e; border-radius:12px;
+            padding:30px; width:180px; text-align:center; }
+    .card:hover { background:#e50914; transform:scale(1.1);
+                  transition:0.3s; cursor:pointer; }
+    .emoji { font-size:3em; }
+    .name  { font-weight:bold; margin:10px 0 5px; }
+    .year  { color:#aaa; }
+    footer { text-align:center; padding:20px; color:#555; }
+  </style>
+</head>
+<body>
+  <header><h1>🎬 MY MOVIE LIST</h1>
+  <p style="color:#ffcdd2">Built with Jenkins + Docker + AWS</p></header>
+  <div class="grid">
+    {% for movie in movies %}
+    <div class="card">
+      <div class="emoji">{{ movie.emoji }}</div>
+      <div class="name">{{ movie.name }}</div>
+      <div class="year">📅 {{ movie.year }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  <footer>Deployed via CI/CD Pipeline ☁️</footer>
+</body>
+</html>
